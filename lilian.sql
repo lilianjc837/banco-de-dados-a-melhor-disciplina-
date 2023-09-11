@@ -85,3 +85,14 @@ select alunos.nome as aluno, matriculas.curso
 from matriculas
 inner join alunos on matriculas.aluno_id = alunos.id
 order by aluno, curso;
+
+-- 16
+select nome
+from autores
+where id = (
+    select autor_id
+    from livros
+    group by autor_id
+    order by COUNT(*) desc
+    limit 1
+);
