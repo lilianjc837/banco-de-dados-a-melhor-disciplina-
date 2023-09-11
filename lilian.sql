@@ -48,3 +48,10 @@ from vendas
 group by produto
 having SUM(receita) > '10.000'
 order by produto;
+
+-- 10
+select autores.nome as autor, COUNT(livros.id) as numero_de_livros
+from autores
+left join livros on autores.id = livros.autor_id
+group by autores.id
+having COUNT(livros.id) > '2';
