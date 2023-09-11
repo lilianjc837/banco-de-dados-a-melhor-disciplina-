@@ -103,3 +103,10 @@ from vendas
 group by produto
 order by menor_receita
 limit 1;
+
+-- 19
+select alunos.nome as aluno, COUNT(matriculas.id) as numero_de_matriculas
+from alunos
+left join matriculas on alunos.id = matriculas.aluno_id
+group by alunos.id
+order by aluno;
