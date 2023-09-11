@@ -73,3 +73,9 @@ select autores.nome as autor, livros.titulo as livro
 from autores
 left join livros on autores.id = livros.autor_id
 order by autor, livro;
+
+-- 14
+select alunos.nome as aluno, matriculas.curso
+from matriculas
+right join alunos on matriculas.aluno_id = alunos.id
+order by curso, aluno;
