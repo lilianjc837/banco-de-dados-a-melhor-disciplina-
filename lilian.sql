@@ -41,3 +41,10 @@ select produto, AVG(receita) as media_de_receita
 from vendas
 group by produto
 order by produto;
+
+-- 9
+select produto, SUM(receita) as receita_total
+from vendas
+group by produto
+having SUM(receita) > '10.000'
+order by produto;
