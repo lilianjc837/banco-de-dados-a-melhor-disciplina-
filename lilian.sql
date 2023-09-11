@@ -35,3 +35,9 @@ select curso, COUNT(aluno_id) as numero_de_alunos
 from matriculas
 group by curso
 order by curso;
+
+-- 8
+select produto, AVG(receita) as media_de_receita
+from vendas
+group by produto
+order by produto;
