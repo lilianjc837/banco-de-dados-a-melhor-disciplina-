@@ -96,3 +96,10 @@ where id = (
     order by COUNT(*) desc
     limit 1
 );
+
+-- 17
+select produto, SUM(receita) as menor_receita
+from vendas
+group by produto
+order by menor_receita
+limit 1;
