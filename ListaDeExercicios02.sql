@@ -85,3 +85,35 @@ end;
 delimiter ;
 
 call sp_titulos_por_categoria('História');
+
+-- 7 
+delimiter //
+create procedure sp_adicionarlivro(
+    in p_titulo varchar(255),
+    in p_editora_id int,
+    in p_ano_publicacao int,
+    in p_numero_paginas int,
+    in p_categoria_id int,
+    out p_resultado varchar(255)
+)
+begin
+    declare livro_existente int;
+    
+    select count(*) into livro_existente
+    from livro
+    where titulo = p_titulo;
+    
+    if livro_existente > 0 then
+        set p_resultado = 'Esse título de livro já existe na bibliotecaaa <3';
+    else
+        insert into livro (titulo, editora_id, ano_publicacao, numero_paginas, categoria_id)
+        values (p_titulo, p_editora_id, p_ano_publicacao, p_numero_paginas, p_categoria_id);
+        
+        set p_resultado = 'O livro foi adicionado com sucessooo <3';
+    end if;
+end;
+//
+delimiter ;
+
+call sp_adicionarlivro('Livro Novo! Ebaaa', 1, 2023, 350, 2, @resultado);
+select @resultado;
