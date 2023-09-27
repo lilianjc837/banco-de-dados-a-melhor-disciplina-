@@ -160,3 +160,17 @@ call sp_livrosateano(2007);
 -- ao final, esse exercício permite que a stored procedure sp_livrosateano...
 -- ...retorne os títulos dos livros publicados até o ano especificado quando é...
 -- ...chamada com um ano como argumento, como no exemplo call sp_livrosateano(2007); que é um parâmetro.
+
+-- 10
+delimiter //
+create procedure sp_livroseseusautores()
+begin
+    select livro.titulo, autor.nome, autor.sobrenome
+    from livro
+    join autor_livro on livro.Livro_id = autor_livro.livro_id
+    join autor on autor_livro.autor_id = autor.autor_id;
+end;
+//
+delimiter ;
+
+call sp_livroseseusautores();
