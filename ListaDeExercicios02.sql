@@ -53,6 +53,20 @@ begin
     end if;
 end; 
 //
+
+-- 5
+delimiter //
+create procedure sp_livrosateano(in p_ano_publicacao int)
+begin
+    select titulo
+    from livro
+    where ano_publicacao <= p_ano_publicacao;
+end;
+//
+delimiter ;
+
+call sp_livrosateano(2007);
+-- 2007 pra homenagear o ano que eu nasci né! kkkkkk
 delimiter ;
 
 call sp_verificar_livros_categoria('História', @possui_livros);
