@@ -117,3 +117,19 @@ delimiter ;
 
 call sp_adicionarlivro('Livro Novo! Ebaaa', 1, 2023, 350, 2, @resultado);
 select @resultado;
+
+-- 8
+delimiter //
+create procedure sp_autor_mais_antigo()
+begin
+    select concat(nome, ' ', sobrenome) as nome_autor
+    from autor
+    where data_nascimento = (
+        select min(data_nascimento)
+        from autor
+    );
+end;
+//
+delimiter ;
+
+call sp_autor_mais_antigo();
