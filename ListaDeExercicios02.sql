@@ -36,3 +36,24 @@ end;
 delimiter ;
 call sp_contar_livros_por_categoria('História', @total);
 select @total;
+
+-- 4
+delimiter //
+create procedure sp_verificar_livros_categoria(in categoria_nome varchar(100), out categoria_possui_livros boolean)
+begin
+    declare contador int;
+    select count(*) into contador
+    from livro
+    inner join categoria on livro.categoria_id = categoria.categoria_id
+    where categoria.nome = categoria_nome;
+    if contador > 0 then
+        set categoria_possui_livros = true;
+    else
+        set categoria_possui_livros = false;
+    end if;
+end; 
+//
+delimiter ;
+
+call sp_verificar_livros_categoria('História', @possui_livros);
+select @possui_livros ;
