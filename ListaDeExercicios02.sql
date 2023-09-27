@@ -133,3 +133,30 @@ end;
 delimiter ;
 
 call sp_autor_mais_antigo();
+
+-- 9
+-- aqui estamos definindo um novo delimitador para evitar conflito com o ponto e vírgula.
+delimiter //
+
+-- aqui estamos criando a procedure chamada sp_livrosateano com um parâmetro de entrada p_ano_publicacao.
+create procedure sp_livrosateano(in p_ano_publicacao int)
+
+-- logo abaixo teremos o begin, indicando o início do bloco de código da stored procedure
+begin
+    -- aqui estamos selecionando o título dos livros da tabela livro
+    select titulo
+    from livro
+    -- ... onde o ano de publicação seja menor ou igual ao ano fornecido como parâmetro, que mais pra frente será mostrado.
+    where ano_publicacao <= p_ano_publicacao;
+end;
+-- logo acima temos o end, que marca o final do bloco de código da stored procedure.
+//
+-- restaurar o delimitador padrão para ponto e vírgula.
+delimiter ;
+
+-- chamar a stored procedure sp_livrosateano com o ano 2007 como argumento.
+call sp_livrosateano(2007);
+
+-- ao final, esse exercício permite que a stored procedure sp_livrosateano...
+-- ...retorne os títulos dos livros publicados até o ano especificado quando é...
+-- ...chamada com um ano como argumento, como no exemplo call sp_livrosateano(2007); que é um parâmetro.
