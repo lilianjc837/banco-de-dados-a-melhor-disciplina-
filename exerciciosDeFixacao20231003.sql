@@ -101,3 +101,42 @@ begin
 end //
 
 delimiter ;
+
+-- 4
+delimiter //
+create function media_livros_por_editora()
+returns decimal(10, 2) deterministic
+begin
+    declare total_livros int default 0;
+    declare total_editoras int default 0;
+    declare editora_id int;
+    declare done int default 0;
+    
+    declare cur_editora cursor for
+        select editora_id from Editora;
+
+declare continue handler for not found set done = 1;
+    
+    open cur_editora;
+    
+    loop_editoras: loop
+        fetch cur_editora into editora_id;
+        if done = 1 then
+            leave loop_editoras;
+        end if;
+        
+        open cur_livros;
+        fetch cur_livros into total_livros;
+        close cur_livros;
+    end loop;
+
+    close cur_editora;
+    
+    if total_editoras = 0 then
+        return 0;
+    else
+        return total_livros / total_editoras;
+    end if;
+
+end //
+delimiter ;
