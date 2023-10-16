@@ -140,3 +140,47 @@ declare continue handler for not found set done = 1;
 
 end //
 delimiter ;
+
+-- 5
+delimiter //
+create function autores_sem_livros()
+returns varchar(500) deterministic
+begin
+    declare lista_autores_sem_livros varchar(500) default '';
+    declare done int default 0;
+    declare autor_id int;
+    declare total_livros int default 0;
+    
+    declare cur_autores cursor for
+        select autor_id, concat(primeiro_nome, ' ', ultimo_nome) as nome_autor
+        from Autor;
+    
+    declare continue handler for not found set done = 1;
+    
+    open cur_autores;
+    
+    verificar_loop: loop
+        fetch cur_autores into autor_id, nome_autor;
+        if done = 1 then
+            leave verificar_loop;
+        end if;
+        
+        select count(*) into total_livros
+        from Livro_Autor
+        where autor_id = autor_id;
+        
+        if total_livros = 0 then
+            if lista_autores_sem_livros = '' then
+                set lista_autores_sem_livros = nome_autor;
+            else
+                set lista_autores_sem_livros = concat(lista_autores_sem_livros, ', ', nome_autor);
+            end if;
+        end if;
+    end loop;
+    
+    close cur_autores;
+    
+    return lista_autores_sem_livros;
+end //
+
+delimiter ;
