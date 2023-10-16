@@ -1,0 +1,175 @@
+-- 1a
+create database bd_nomes;
+use bd_nomes;
+
+create table tb_nomes (
+	nome varchar(100) not null
+);
+
+insert into tb_nomes (nome) values 
+('Roberta'),
+('Roberto'),
+('Maria Clara'),
+('João');
+    
+select * from tb_nomes;
+
+-- 1b
+select upper(nome) as nomes_m from tb_nomes;
+
+-- 1c
+select nome, length(nome) as quant_nome from tb_nomes;
+
+-- 1d
+select concat ("Sra ", nome) as nomes_com_sr_a from tb_nomes where nome like '%a'
+union
+select concat ("Sr ", nome) from tb_nomes where nome like '%o';
+
+-- 2a
+create table produtos (
+	produto varchar(50) not null,
+	preco float not null,
+    quantidade int not null
+);
+
+select * from produtos;
+
+-- 2a
+insert into produtos (produto, preco, quantidade)
+values ('Lápis', 1.768, -50),
+	('Caneta', 2.234, -40),
+    ('Caderno', 10.456, -30);
+    
+-- 2b
+select round(preco, 2) as precos_arredondados from produtos;
+
+-- made by prof mayck: UPDATE produtos set quantidade = quantidade * -1 ;
+
+-- 2c
+select abs(quantidade) as quant_abs from produtos;
+
+-- 2d 
+select avg(preco) as media_precos from produtos;
+
+-- 3a
+create table eventos (
+	data_evento varchar(50) not null
+);
+
+insert into eventos (data_evento)
+values ('1976-07-25'),
+    ('1978-05-11'),
+    ('1998-01-30'),
+    ('1999-07-09'),
+    ('2007-03-08');
+    
+select * from eventos;
+
+-- 3b
+insert into eventos (data_evento) values (now());
+
+-- 3c
+select datediff('2007-03-08', '1978-05-11') as dias_entre_duas_datas;
+
+-- 3d
+select data_evento, dayname(data_evento) as dia_da_semana from eventos;
+
+-- 4a
+select produto, quantidade, if(quantidade > 0, 'em estoque', 'fora de estoque') as status_estoque from produtos;
+
+-- 4b
+select produto, preco,
+       case
+           when preco <= 2 then 'barato'
+           when preco between 2 and 9 then 'médio'
+           else 'caro'
+       end as categoria_preco from produtos;
+
+-- 5a
+delimiter //
+create function TOTAL_VALOR (preco float, quantidade int)
+returns float deterministic
+begin
+    declare valor_total float;
+    
+    select preco * quantidade into valor_total;
+    
+    return valor_total;
+end;
+//
+DELIMITER ;
+
+-- 5b
+select TOTAL_VALOR(preco, ABS(quantidade)) as valor_total
+from produtos;
+
+-- 6a 
+select count(*) as total_produtos from produtos;
+
+-- 6b
+select max(preco) as prdt_mais_caro from produtos;
+
+-- 6c
+select min(preco) as prdt_mais_barato from produtos;
+
+-- 6d
+select sum(if(quantidade > 0, preco * quantidade, 0)) as soma_total from produtos;
+
+-- 7a
+delimiter //
+
+create function calcular_fatorial(n int)
+returns int deterministic
+begin
+    declare resultado int;
+    set resultado = 1;
+    while n > 0 do
+        set resultado = resultado * n;
+        set n = n - 1;
+    end while;
+    return resultado;
+end;
+//
+
+delimiter ;
+
+select calcular_fatorial(7);
+
+ -- 7b
+delimiter //
+
+create function calcular_exponencial(base decimal, expoente int)
+returns decimal deterministic
+begin
+    declare resultado decimal;
+    set resultado = pow(base, expoente);
+    return resultado;
+end;
+//
+
+delimiter ;
+
+select calcular_exponencial(7.0, 2);
+
+-- 7c
+delimiter //
+
+create function verifica_pa(palavra varchar(255))
+returns int deterministic
+begin
+    declare palavra_invertida varchar(255);
+    set palavra_invertida = reverse(palavra);
+    
+    if palavra = palavra_invertida then
+        return 1;
+    else
+        return 0;
+    end if;
+end;
+//
+
+delimiter ;
+
+select verifica_pa('arara'); 
+
+select verifica_pa('lilian');
