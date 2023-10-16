@@ -27,3 +27,40 @@ begin
     return total;
 end //
 delimiter ;
+
+-- 2
+delimiter //
+create function listar_livros_por_autor(primeiro_nome_autor varchar(200), ultimo_nome_autor varchar(200))
+returns text deterministic
+begin
+    declare lista_de_livros text default '';
+    declare done int default 0;
+    declare livro_id int;
+    
+    declare cur cursor for
+        select la.livro_id
+        from Livro_Autor la
+        join Autor a on la.autor_id = a.autor_id
+        where a.primeiro_nome = primeiro_nome_autor
+        and a.ultimo_nome = ultimo_nome_autor;
+
+    declare continue handler for not found set done = 1;
+
+    open cur;
+
+    livros_loop: loop
+        fetch cur into livro_id;
+        if done = 1 then
+            leave livros_loop;
+        end if;
+
+        select group_concat(titulo) into lista_de_livros
+        from Livro
+        where livro_id = livro_id;
+    end loop;
+
+    close cur;
+
+    return lista_de_livros;
+end //
+delimiter ;
