@@ -64,3 +64,40 @@ begin
     return lista_de_livros;
 end //
 delimiter ;
+
+-- 3
+delimiter //
+create function atualizar_resumos()
+returns int deterministic
+begin
+    declare done int default 0;
+    declare livro_id int;
+    declare resumo_atual varchar(1000);
+    declare novo_resumo varchar(1000);
+    
+    declare cur cursor for
+        select livro_id, resumo from Livro;
+    
+    declare continue handler for not found set done = 1;
+    
+    open cur;
+    
+    resumo_loop: loop
+        fetch cur into livro_id, resumo_atual;
+        if done = 1 then
+            leave resumo_loop;
+        end if;
+        
+        set novo_resumo = concat(resumo_atual, ' Este é um excelente livro!');
+        
+        update Livro
+        set resumo = novo_resumo
+        where livro_id = livro_id;
+    end loop;
+    
+    close cur;
+    
+    return 1;
+end //
+
+delimiter ;
